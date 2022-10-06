@@ -1,34 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect } from 'react';
+import './App.css';
+import { useManagers } from './contexts/StoreContext';
+import { Link, Route, Routes } from 'react-router-dom';
+import { Observer } from 'mobx-react-lite';
 
-function App() {
-  const [count, setCount] = useState(0)
+function App(): JSX.Element {
+  const { thingManager } = useManagers();
+
+  // You should obviously replace this with something better
+  // And be in another file
+  const HomePage = (): JSX.Element => {
+    return (
+      <>
+        <h1>Hello! this is home page!</h1>
+        <p>Yay, the page is working!</p>
+      </>
+    );
+  };
+
+  // You should obviously replace this with something better
+  // And be in another file
+  const ThingsPage = (): JSX.Element => {
+    return (
+      <Observer>
+        {() => (
+          <>
+            <h1>This is a thing to do</h1>
+            <p>{thingManager?.suggestedThing?.activity ?? 'Nothing todo'}</p>
+          </>
+        )}
+      </Observer>
+    );
+  };
+
+  useEffect(() => {
+    thingManager.loadThingTodo();
+  }, []);
 
   return (
     <div className="App">
+      <nav>
+        <ul style={{ listStyle: 'none' }}>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/things">Things to do</Link>
+          </li>
+        </ul>
+      </nav>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Routes>
+          <Route path="/things" element={<ThingsPage />} />
+          <Route path="/" element={<HomePage />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

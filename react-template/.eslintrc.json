@@ -19,6 +19,7 @@
         "react"
     ],
     "rules": {
+        "@typescript-eslint/space-before-function-paren": ["error", "never"],
         "@typescript-eslint/triple-slash-reference": "off",
         "react/react-in-jsx-scope": "off",
         "react/jsx-no-target-blank": "off",
